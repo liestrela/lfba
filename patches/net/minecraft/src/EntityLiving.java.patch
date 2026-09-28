@@ -1,0 +1,63 @@
+--- a/net/minecraft/src/EntityLiving.java
++++ b/net/minecraft/src/EntityLiving.java
+@@ -290,13 +290,13 @@
+ 		return 20;
+ 	}
+ 
+-	public boolean attackEntityFrom(Entity var1, int var2) {
++	public boolean attackEntityFrom(Entity attacker, int damage) {
+ 		if(this.worldObj.difficultySetting < 0) {
+ 			return false;
+ 		}
+ 
+ 		if(this.worldObj.multiplayerWorld) {
+-			var2 = 0;
++			damage = 0;
+ 		}
+ 
+ 		this.entityAge = 0;
+@@ -305,36 +305,36 @@
+ 		} else {
+ 			this.limbYaw = 1.5F;
+ 			if((float)this.heartsLife > (float)this.heartsHalvesLife / 2.0F) {
+-				if(this.prevHealth - var2 >= this.health) {
++				if(this.prevHealth - damage >= this.health) {
+ 					return false;
+ 				}
+ 
+-				this.health = this.prevHealth - var2;
++				this.health = this.prevHealth - damage;
+ 			} else {
+ 				this.prevHealth = this.health;
+ 				this.heartsLife = this.heartsHalvesLife;
+-				this.health -= var2;
++				this.health -= damage;
+ 				this.hurtTime = this.maxHurtTime = 10;
+ 			}
+ 
+ 			this.attackedAtYaw = 0.0F;
+-			if(var1 != null) {
+-				double var3 = var1.posX - this.posX;
++			if(attacker != null) {
++				double var3 = attacker.posX - this.posX;
+ 
+ 				double var5;
+-				for(var5 = var1.posZ - this.posZ; var3 * var3 + var5 * var5 < 1.0E-4D; var5 = (Math.random() - Math.random()) * 0.01D) {
++				for(var5 = attacker.posZ - this.posZ; var3 * var3 + var5 * var5 < 1.0E-4D; var5 = (Math.random() - Math.random()) * 0.01D) {
+ 					var3 = (Math.random() - Math.random()) * 0.01D;
+ 				}
+ 
+ 				this.attackedAtYaw = (float)(Math.atan2(var5, var3) * 180.0D / (double)((float)Math.PI)) - this.rotationYaw;
+-				this.knockBack(var1, var2, var3, var5);
++				this.knockBack(attacker, damage, var3, var5);
+ 			} else {
+ 				this.attackedAtYaw = (float)((int)(Math.random() * 2.0D) * 180);
+ 			}
+ 
+ 			if(this.health <= 0) {
+ 				this.worldObj.playSoundAtEntity(this, this.getDeathSound(), this.getSoundVolume(), (this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F + 1.0F);
+-				this.onDeath(var1);
++				this.onDeath(attacker);
+ 			} else {
+ 				this.worldObj.playSoundAtEntity(this, this.getHurtSound(), this.getSoundVolume(), (this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F + 1.0F);
+ 			}

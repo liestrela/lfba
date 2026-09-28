@@ -1,0 +1,18 @@
+--- a/net/minecraft/src/ScaledResolution.java
++++ b/net/minecraft/src/ScaledResolution.java
+@@ -7,11 +7,11 @@
+ 	private double scaledHeightD;
+ 	private int scaleFactor;
+ 
+-	public ScaledResolution(GameSettings gameSettings1, int var1, int var2) {
+-		this.scaledWidth = var1;
+-		this.scaledHeight = var2;
++	public ScaledResolution(GameSettings gameSettings, int width, int height) {
++		this.scaledWidth = width;
++		this.scaledHeight = height;
+ 		this.scaleFactor = 1;
+-		int i4 = gameSettings1.guiScale;
++		int i4 = gameSettings.guiScale;
+ 		if(i4 == 0) {
+ 			i4 = 1000;
+ 		}

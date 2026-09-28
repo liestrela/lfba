@@ -1,0 +1,10 @@
+--- a/net/minecraft/src/GuiContainer.java
++++ b/net/minecraft/src/GuiContainer.java
+@@ -766,7 +766,6 @@
+ 			this.mc.thePlayer.dropPlayerItem(var1.draggedItemStack);
+ 			var1.draggedItemStack = null;
+ 		}
+-
+ 	}
+ 
+ 	public boolean doesGuiPauseGame() {

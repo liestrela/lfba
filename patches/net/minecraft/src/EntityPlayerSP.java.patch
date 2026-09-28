@@ -1,0 +1,13 @@
+--- a/net/minecraft/src/EntityPlayerSP.java
++++ b/net/minecraft/src/EntityPlayerSP.java
+@@ -221,7 +221,9 @@
+ 		}
+ 	}
+ 
+-	public void sendChatMessage(String var1) {
++	public void sendChatMessage(String msg) {
++		String fmt_msg = String.format("<%s> %s", this.mc.session.username, msg);
++		this.mc.ingameGUI.addChatMessage(fmt_msg);
+ 	}
+ 
+ 	public void onPlayerUpdate() {

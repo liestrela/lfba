@@ -1,0 +1,13 @@
+--- a/net/minecraft/src/InventoryPlayer.java
++++ b/net/minecraft/src/InventoryPlayer.java
+@@ -13,6 +13,10 @@
+ 		this.player = var1;
+ 	}
+ 
++	public void cleanInventory() {
++		this.mainInventory = new ItemStack[36];
++	}
++	
+ 	public ItemStack getCurrentItem() {
+ 		return this.mainInventory[this.currentItem];
+ 	}

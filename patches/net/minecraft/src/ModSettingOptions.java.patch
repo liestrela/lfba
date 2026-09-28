@@ -1,0 +1,85 @@
+--- a/net/minecraft/src/ModSettingOptions.java
++++ b/net/minecraft/src/ModSettingOptions.java
+@@ -0,0 +1,82 @@
++package net.minecraft.src;
++
++import java.util.ArrayList;
++import java.util.List;
++
++public enum ModSettingOptions {
++	DURABILITY_PRE_B12(ModSetting.DURABILITY_STYLE, "Pre-b1.2"),
++	DURABILITY_B12(ModSetting.DURABILITY_STYLE, "b1.2", true), /* default */
++
++	DOOR_SOUND_RANDOM(ModSetting.DOOR_SOUND, "Random"),
++	DOOR_SOUND_OPEN_CLOSE(ModSetting.DOOR_SOUND, "Open/Close", true), /* default */
++	
++	CHEST_SOUND_DISABLED(ModSetting.CHEST_SOUND, "Disabled"),
++	CHEST_SOUND_ENABLED(ModSetting.CHEST_SOUND, "Enabled", true),
++
++	FULLSCREEN_NATIVE(ModSetting.FULLSCREEN_RESOLUTION, "Native", true),
++	FULLSCREEN_720P(ModSetting.FULLSCREEN_RESOLUTION, "720p");
++
++	private static final ModSettingOptions[] VALUES = values();
++	private final ModSetting setting;
++	private final String displayString;
++	private final boolean isDefault;
++
++	static ModSettingOptions byId(int id) {
++		return VALUES[id];
++	}
++
++	/* all options belonging to a setting, in declaration order */
++	static ModSettingOptions[] forSetting(ModSetting setting) {
++		List<ModSettingOptions> options = new ArrayList<ModSettingOptions>();
++		for(ModSettingOptions option : VALUES) {
++			if(option.setting == setting) {
++				options.add(option);
++			}
++		}
++		return options.toArray(new ModSettingOptions[options.size()]);
++	}
++
++	ModSettingOptions(ModSetting setting, String displayString) {
++		this(setting, displayString, false);
++	}
++
++	ModSettingOptions(ModSetting setting, String displayString, boolean isDefault) {
++		this.setting = setting;
++		this.displayString = displayString;
++		this.isDefault = isDefault;
++	}
++
++	public boolean isDefault() {
++		return this.isDefault;
++	}
++
++	public int getId() {
++		return this.ordinal();
++	}
++
++	public ModSetting getSetting() {
++		return this.setting;
++	}
++
++	/* position of this option inside its setting, used when saving */
++	public int getIndex() {
++		ModSettingOptions[] options = this.setting.getOptions();
++		for(int i = 0; i < options.length; ++i) {
++			if(options[i] == this) {
++				return i;
++			}
++		}
++		return -1;
++	}
++
++	/* the option `step` positions away inside the same setting, wrapping around */
++	public ModSettingOptions cycle(int step) {
++		ModSettingOptions[] options = this.setting.getOptions();
++		int next = ((this.getIndex() + step) % options.length + options.length) % options.length;
++		return options[next];
++	}
++
++	public String getDisplayString() {
++		return this.displayString;
++	}
++}

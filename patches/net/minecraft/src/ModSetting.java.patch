@@ -1,0 +1,74 @@
+--- a/net/minecraft/src/ModSetting.java
++++ b/net/minecraft/src/ModSetting.java
+@@ -0,0 +1,71 @@
++package net.minecraft.src;
++
++public enum ModSetting {
++	DURABILITY_STYLE("Durability style", "durabilityStyle"),
++	DOOR_SOUND("Door sound", "doorSound"),
++	CHEST_SOUND("Chest sound", "chestSound"),
++	FULLSCREEN_RESOLUTION("Fullscreen res", "fullscreenResolution");
++	
++	private static final ModSetting[] VALUES = values();
++	private final String label;
++	private final String key;
++	private ModSettingOptions[] options;
++
++	public static ModSetting[] getValues() {
++		return VALUES;
++	}
++
++	ModSetting(String label, String key) {
++		this.label = label;
++		this.key = key;
++	}
++
++	public int getId() {
++		return this.ordinal();
++	}
++
++	public String getLabel() {
++		return this.label;
++	}
++
++	public String getKey() {
++		return this.key;
++	}
++
++	public ModSettingOptions[] getOptions() {
++		if(this.options == null) {
++			this.options = ModSettingOptions.forSetting(this);
++		}
++		return this.options;
++	}
++
++	public ModSettingOptions getDefault() {
++		ModSettingOptions[] options = this.getOptions();
++		if(options.length == 0) {
++			throw new IllegalStateException(this + " has no options in ModSettingOptions");
++		}
++		for(ModSettingOptions option : options) {
++			if(option.isDefault()) {
++				return option;
++			}
++		}
++		return options[0];
++	}
++
++	public static int size() {
++		return VALUES.length;
++	}
++
++	public static ModSetting byId(int id) {
++		return VALUES[id];
++	}
++
++	static ModSetting byKey(String key) {
++		for(ModSetting setting : VALUES) {
++			if(setting.key.equals(key)) {
++				return setting;
++			}
++		}
++		return null;
++	}
++}

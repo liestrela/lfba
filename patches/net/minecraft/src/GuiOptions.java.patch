@@ -1,0 +1,95 @@
+--- a/net/minecraft/src/GuiOptions.java
++++ b/net/minecraft/src/GuiOptions.java
+@@ -4,20 +4,28 @@
+ 	private static int[] relevantOptions = new int[]{0, 1, 2, 3, 8, 9, 14, 15};
+ 	private GuiScreen parentScreen;
+ 	protected String screenTitle = "Options";
+-	private GameSettings options;
++	private GameSettings gameOptions;
++	private ModSettings modSettings;
++	
++	/* retrocompatible constructor */
++	public GuiOptions(GuiScreen gui, GameSettings gameSettings) {
++		this.parentScreen = gui;
++		this.gameOptions = gameSettings;
++	}
+ 
+-	public GuiOptions(GuiScreen var1, GameSettings var2) {
+-		this.parentScreen = var1;
+-		this.options = var2;
++	public GuiOptions(GuiScreen gui, GameSettings gameSettings, ModSettings modSettings) {
++		this.parentScreen = gui;
++		this.gameOptions = gameSettings;
++		this.modSettings = modSettings;
+ 	}
+ 
+ 	public void initGui() {
+ 		int var2 = 0;
+ 
+ 		for(int i6 : relevantOptions) {
+-			if(this.options.isSlider(i6) == 0) {
++			if(this.gameOptions.isSlider(i6) == 0) {
+ 				if(i6 == 8 && this.mc.theWorld != null && !this.mc.theWorld.isTitle()) {
+-					GuiSmallButton guiSmallButton = new GuiSmallButton(i6, this.width / 2 - 155 + var2 % 2 * 160, this.height / 6 + 24 * (var2 >> 1), this.mc.theWorld.multiplayerWorld ? "Creative mode: " + (this.mc.theWorld.difficultySetting < 0 ? "ON" : "OFF") : this.options.getOptionDisplayString(i6));
++					GuiSmallButton guiSmallButton = new GuiSmallButton(i6, this.width / 2 - 155 + var2 % 2 * 160, this.height / 6 + 24 * (var2 >> 1), this.mc.theWorld.multiplayerWorld ? "Creative mode: " + (this.mc.theWorld.difficultySetting < 0 ? "ON" : "OFF") : this.gameOptions.getOptionDisplayString(i6));
+ 					guiSmallButton.enabled = false;
+ 					this.controlList.add(guiSmallButton);
+ 				} else if(i6 == 9 && this.mc.theWorld != null && !this.mc.theWorld.isTitle() && (this.mc.theWorld.difficultySetting < 0 || this.mc.theWorld.multiplayerWorld)) {
+@@ -25,38 +33,44 @@
+ 					guiSmallButton.enabled = false;
+ 					this.controlList.add(guiSmallButton);
+ 				} else {
+-					this.controlList.add(new GuiSmallButton(i6, this.width / 2 - 155 + var2 % 2 * 160, this.height / 6 + 24 * (var2 >> 1), this.options.getOptionDisplayString(i6)));
++					this.controlList.add(new GuiSmallButton(i6, this.width / 2 - 155 + var2 % 2 * 160, this.height / 6 + 24 * (var2 >> 1), this.gameOptions.getOptionDisplayString(i6)));
+ 				}
+ 			} else {
+-				this.controlList.add(new GuiSlider(i6, this.width / 2 - 155 + var2 % 2 * 160, this.height / 6 + 24 * (var2 >> 1), i6, this.options.getOptionDisplayString(i6), this.options.getOptionFloatValue(i6)));
++				this.controlList.add(new GuiSlider(i6, this.width / 2 - 155 + var2 % 2 * 160, this.height / 6 + 24 * (var2 >> 1), i6, this.gameOptions.getOptionDisplayString(i6), this.gameOptions.getOptionFloatValue(i6)));
+ 			}
+ 
+ 			++var2;
+ 		}
+ 
+ 		this.controlList.add(new GuiButton(101, this.width / 2 - 100, this.height / 6 + 96 + 12, "Video settings..."));
+-		this.controlList.add(new GuiButton(100, this.width / 2 - 100, this.height / 6 + 120 + 12, "Controls..."));
++		this.controlList.add(new GuiButton(100, this.width / 2 - 100, this.height / 6 + 120 + 12, 98, 20, "Controls..."));
++		this.controlList.add(new GuiButton(102, this.width / 2 + 2, this.height / 6 + 120 + 12, 98, 20, "Mods..."));
+ 		this.controlList.add(new GuiButton(200, this.width / 2 - 100, this.height / 6 + 168, "Done"));
+ 	}
+ 
+-	protected void actionPerformed(GuiButton var1) {
+-		if(var1.enabled) {
+-			if(var1.id < 100 && var1 instanceof GuiSmallButton) {
+-				this.options.setOptionValue(var1.id, GuiScreen.isShiftKeyDown() ? -1 : 1);
+-				var1.displayString = this.options.getOptionDisplayString(var1.id);
++	protected void actionPerformed(GuiButton button) {
++		if(button.enabled) {
++			if(button.id < 100 && button instanceof GuiSmallButton) {
++				this.gameOptions.setOptionValue(button.id, GuiScreen.isShiftKeyDown() ? -1 : 1);
++				button.displayString = this.gameOptions.getOptionDisplayString(button.id);
+ 			}
+ 
+-			if(var1.id == 101) {
++			if(button.id == 101) {
+ 				this.mc.options.saveOptions();
+-				this.mc.displayGuiScreen(new GuiVideoSettings(this, this.options));
++				this.mc.displayGuiScreen(new GuiVideoSettings(this, this.gameOptions));
+ 			}
+ 
+-			if(var1.id == 100) {
++			if(button.id == 100) {
++				this.mc.options.saveOptions();
++				this.mc.displayGuiScreen(new GuiControls(this, this.gameOptions));
++			}
++			
++			if(button.id == 102) {
+ 				this.mc.options.saveOptions();
+-				this.mc.displayGuiScreen(new GuiControls(this, this.options));
++				this.mc.displayGuiScreen(new GuiModSettings(this, this.modSettings != null ? this.modSettings : this.mc.modOptions));
+ 			}
+ 
+-			if(var1.id == 200) {
++			if(button.id == 200) {
+ 				this.mc.options.saveOptions();
+ 				this.mc.displayGuiScreen(this.parentScreen);
+ 			}

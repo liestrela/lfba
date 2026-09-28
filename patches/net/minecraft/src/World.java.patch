@@ -1,0 +1,13 @@
+--- a/net/minecraft/src/World.java
++++ b/net/minecraft/src/World.java
+@@ -1866,8 +1866,8 @@
+ 		}
+ 	}
+ 
+-	public void saveWorldIndirectly(IProgressUpdate var1) {
+-		this.saveWorld(true, var1);
++	public void saveWorldIndirectly(IProgressUpdate progress) {
++		this.saveWorld(true, progress);
+ 
+ 		try {
+ 			ThreadedFileIOBase.threadedIOInstance.waitForFinish();

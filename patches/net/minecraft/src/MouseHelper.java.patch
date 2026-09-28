@@ -1,0 +1,30 @@
+--- a/net/minecraft/src/MouseHelper.java
++++ b/net/minecraft/src/MouseHelper.java
+@@ -17,7 +17,12 @@
+ 	}
+ 
+ 	public void grabMouseCursor() {
+-		Mouse.setGrabbed(true);
++		try {
++			Mouse.setGrabbed(true);
++		} catch (Throwable var1) {
++			var1.printStackTrace();
++		}
++
+ 		this.deltaX = 0;
+ 		this.deltaY = 0;
+ 	}
+@@ -37,7 +42,12 @@
+ 		}
+ 
+ 		Mouse.setCursorPosition(i1 / 2, i2 / 2);
+-		Mouse.setGrabbed(false);
++
++		try {
++			Mouse.setGrabbed(false);
++		} catch (Throwable var3) {
++			var3.printStackTrace();
++		}
+ 	}
+ 
+ 	public void mouseXYChange() {

@@ -1,0 +1,52 @@
+--- a/net/minecraft/src/GuiMainMenu.java
++++ b/net/minecraft/src/GuiMainMenu.java
+@@ -160,47 +160,12 @@
+ 			((GuiButton)this.controlList.get(1)).enabled = false;
+ 		}
+ 
+-		if(this.options.panorama == 1) {
+-			if(this.mc.theWorld == null || !this.mc.theWorld.isTitle()) {
+-				this.mc.playerController = new PlayerController(this.mc);
+-				this.mc.playerController.setCreative(true);
+-				LoadingScreenRenderer loadingScreen = this.mc.loadingScreen;
+-				if(loadingScreen != null) {
+-					this.mc.loadingScreen = null;
+-				} else {
+-					this.mc.loadingScreen = new LoadingScreenRenderer(this.mc);
+-					this.mc.loadingScreen.title = true;
+-				}
+-
+-				if(this.mc.entityRenderer != null) {
+-					EntityRenderer entityRenderer = this.mc.entityRenderer;
+-					entityRenderer.panoramaX = this.options.simulationX;
+-					entityRenderer.panoramaY = this.options.simulationY;
+-					entityRenderer.panoramaZ = this.options.simulationZ;
+-					entityRenderer.panoramaYaw = this.options.simulationYaw;
+-					entityRenderer.panoramaPitch = this.options.simulationPitch;
+-				}
+-
+-				this.mc.startTitleWorld("TitleWorld", "Title World");
+-				this.mc.loadingScreen = loadingScreen;
+-				if(this.mc.loadingScreen != null) {
+-					this.mc.loadingScreen.title = false;
+-				}
+-			}
+-
+-			if(this.mc.theWorld != null) {
+-				this.mc.theWorld.titleSpeed = this.options.simulationSpeed;
+-				this.mc.theWorld.titleLighten = this.options.lighten;
+-			}
+-		} else if(this.options.panorama > 1) {
+-			this.viewportTexture = this.mc.renderEngine.allocateAndSetupTexture(new BufferedImage(256, 256, 2));
+-		}
+-
++		this.viewportTexture = this.mc.renderEngine.allocateAndSetupTexture(new BufferedImage(256, 256, 2));
+ 	}
+ 
+ 	protected void actionPerformed(GuiButton var1) {
+ 		if(var1.id == 0) {
+-			this.mc.displayGuiScreen(new GuiOptions(this, this.mc.options));
++			this.mc.displayGuiScreen(new GuiOptions(this, this.mc.options, this.mc.modOptions));
+ 		}
+ 
+ 		if(var1.id == 1) {

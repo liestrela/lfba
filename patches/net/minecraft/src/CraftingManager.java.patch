@@ -1,0 +1,19 @@
+--- a/net/minecraft/src/CraftingManager.java
++++ b/net/minecraft/src/CraftingManager.java
+@@ -18,10 +18,16 @@
+ public class CraftingManager {
+ 	private static final CraftingManager instance = new CraftingManager();
+ 	private List recipes = new ArrayList();
++	public GameSettings gameSettings;
+ 
+ 	public static final CraftingManager getInstance() {
+ 		return instance;
+ 	}
++	
++	public static final CraftingManager getInstance(GameSettings settings) {
++		instance.gameSettings = settings;
++		return instance;
++	}
+ 
+ 	public static final CraftingManager reloadRecipes() {
+ 		boolean canLoad = false;

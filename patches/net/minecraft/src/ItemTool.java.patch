@@ -1,0 +1,83 @@
+--- a/net/minecraft/src/ItemTool.java
++++ b/net/minecraft/src/ItemTool.java
+@@ -6,51 +6,66 @@
+ 	private int damageVsEntity;
+ 	public final int toolMaterial;
+ 	protected final int harvestLevel;
++	private final int maxDamagePreB12;
+ 
+-	public ItemTool(int var1, int var2, String var3, Block[] var4) {
+-		super(var1);
+-		if(var3.equals("WOOD")) {
++	public ItemTool(int id, int damage, String material, Block[] blocksWeakTo) {
++		super(id);
++		if(material.equals("WOOD")) {
+ 			this.toolMaterial = 200;
+ 			this.harvestLevel = 0;
+ 			this.maxDamage = 59;
++			this.maxDamagePreB12 = 33;
+ 			this.efficiencyOnProperMaterial = 2.0F;
+-			this.damageVsEntity = var2;
+-		} else if(var3.equals("STONE")) {
++			this.damageVsEntity = damage;
++		} else if(material.equals("STONE")) {
+ 			this.toolMaterial = 0;
+ 			this.harvestLevel = 1;
+ 			this.maxDamage = 131;
++			this.maxDamagePreB12 = 65;
+ 			this.efficiencyOnProperMaterial = 4.0F;
+-			this.damageVsEntity = var2 + 1;
+-		} else if(var3.equals("IRON")) {
++			this.damageVsEntity = damage + 1;
++		} else if(material.equals("IRON")) {
+ 			this.toolMaterial = 0;
+ 			this.harvestLevel = 2;
+ 			this.maxDamage = 250;
++			this.maxDamagePreB12 = 129;
+ 			this.efficiencyOnProperMaterial = 6.0F;
+-			this.damageVsEntity = var2 + 2;
+-		} else if(var3.equals("EMERALD")) {
++			this.damageVsEntity = damage + 2;
++		} else if(material.equals("EMERALD")) {
+ 			this.toolMaterial = 0;
+ 			this.harvestLevel = 3;
+ 			this.maxDamage = 1561;
++			this.maxDamagePreB12 = 1025;
+ 			this.efficiencyOnProperMaterial = 8.0F;
+-			this.damageVsEntity = var2 + 3;
+-		} else if(var3.equals("GOLD")) {
++			this.damageVsEntity = damage + 3;
++		} else if(material.equals("GOLD")) {
+ 			this.toolMaterial = 0;
+ 			this.harvestLevel = 0;
+ 			this.maxDamage = 32;
++			this.maxDamagePreB12 = 32;
+ 			this.efficiencyOnProperMaterial = 12.0F;
+-			this.damageVsEntity = var2;
++			this.damageVsEntity = damage;
+ 		} else {
+ 			this.toolMaterial = 0;
+ 			this.harvestLevel = 0;
+ 			this.maxDamage = 32;
++			this.maxDamagePreB12 = 32;
+ 			this.efficiencyOnProperMaterial = 2.0F;
+-			this.damageVsEntity = var2;
++			this.damageVsEntity = damage;
+ 		}
+ 
+-		this.blocksEffectiveAgainst = var4;
++		this.blocksEffectiveAgainst = blocksWeakTo;
+ 		this.maxStackSize = 1;
+ 	}
+ 
++	public int getMaxDamage() {
++		if(ModSettings.getInstance().getOptionValue(ModSetting.DURABILITY_STYLE) == ModSettingOptions.DURABILITY_PRE_B12) {
++			return this.maxDamagePreB12;
++		} else {
++			return this.maxDamage;
++		}
++	}
++
+ 	public float getStrVsBlock(ItemStack var1, Block var2) {
+ 		for(int var3 = 0; var3 < this.blocksEffectiveAgainst.length; ++var3) {
+ 			if(this.blocksEffectiveAgainst[var3] == var2) {

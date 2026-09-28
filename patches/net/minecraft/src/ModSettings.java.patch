@@ -1,0 +1,127 @@
+--- a/net/minecraft/src/ModSettings.java
++++ b/net/minecraft/src/ModSettings.java
+@@ -0,0 +1,124 @@
++package net.minecraft.src;
++
++import java.io.BufferedReader;
++import java.io.File;
++import java.io.FileReader;
++import java.io.FileWriter;
++import java.io.PrintWriter;
++
++public class ModSettings {
++	private static final ModSettings instance = new ModSettings();
++	
++	private File optionsFile;
++	private ModSettingOptions[] settings = new ModSettingOptions[ModSetting.size()];
++
++	private ModSettings() {
++		this.loadDefaults();
++	}
++
++	public static final ModSettings getInstance() {
++		return instance;
++	}
++
++	public void load(File dataDir) {
++		this.optionsFile = new File(dataDir, "mod_options.txt");
++		this.loadDefaults();
++		this.loadOptions();
++	}
++	
++	private void loadDefaults() {
++		for(ModSetting option : ModSetting.getValues()) {
++			this.settings[option.getId()] = option.getDefault();
++		}
++	}
++
++	public void moveOptionValue(ModSetting option, int value) {
++		this.setOptionValue(option, this.settings[option.getId()].cycle(value));
++	}
++
++	public void setOptionValue(ModSetting option, ModSettingOptions value) {
++		if(value.getSetting() != option) {
++			throw new IllegalArgumentException(value + " is not a value of " + option);
++		}
++		this.settings[option.getId()] = value;
++		this.saveOptions();
++	}
++
++	public ModSettingOptions getOptionValue(ModSetting option) {
++		return this.settings[option.getId()];
++	}
++
++	public boolean isSlider(ModSetting option) {
++		return false;
++	}
++
++	public String getOptionDisplayString(ModSetting option) {
++		return option.getLabel() + ": " + this.getOptionValue(option).getDisplayString();
++	}
++
++	public static ModSetting[] getOptions() {
++		return ModSetting.getValues();
++	}
++
++	public void loadOptions() {
++		try {
++			if(this.optionsFile == null || !this.optionsFile.exists()) {
++				return;
++			}
++
++			BufferedReader bufferedOptionsFile = new BufferedReader(new FileReader(this.optionsFile));
++			String optionLine = "";
++
++			while(true) {
++				optionLine = bufferedOptionsFile.readLine();
++				if(optionLine == null) {
++					bufferedOptionsFile.close();
++					break;
++				}
++
++				String[] optionArgs = optionLine.split(":");
++				if(optionArgs.length < 2) {
++					continue;
++				}
++
++				ModSetting option = ModSetting.byKey(optionArgs[0]);
++				if(option == null) {
++					continue;
++				}
++
++				try {
++					int index = Integer.parseInt(optionArgs[1]);
++					ModSettingOptions[] values = option.getOptions();
++					if(index >= 0 && index < values.length) {
++						this.settings[option.getId()] = values[index];
++					}
++				} catch (NumberFormatException e) {
++					System.out.println("Skipping bad mod option: " + optionLine);
++				}
++			}
++		} catch (Exception e) {
++			System.out.println("Failed to load mod options");
++			e.printStackTrace();
++		}
++
++	}
++
++	public void saveOptions() {
++		if(this.optionsFile == null) {
++			return;
++		}
++
++		try {
++			PrintWriter writer = new PrintWriter(new FileWriter(this.optionsFile));
++			for(ModSetting option : ModSetting.getValues()) {
++				writer.println(option.getKey() + ":" + this.getOptionValue(option).getIndex());
++			}
++
++			writer.close();
++		} catch (Exception e) {
++			System.out.println("Failed to save mod options");
++			e.printStackTrace();
++		}
++
++	}
++}

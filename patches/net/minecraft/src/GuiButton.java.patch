@@ -1,0 +1,27 @@
+--- a/net/minecraft/src/GuiButton.java
++++ b/net/minecraft/src/GuiButton.java
+@@ -17,17 +17,17 @@
+ 		this(var1, var2, var3, 200, 20, var4);
+ 	}
+ 
+-	protected GuiButton(int var1, int var2, int var3, int var4, int var5, String var6) {
++	protected GuiButton(int buttonId, int x, int y, int buttonWidth, int buttonHeight, String label) {
+ 		this.width = 200;
+ 		this.height = 20;
+ 		this.enabled = true;
+ 		this.visible = true;
+-		this.id = var1;
+-		this.xPosition = var2;
+-		this.yPosition = var3;
+-		this.width = var4;
+-		this.height = var5;
+-		this.displayString = var6;
++		this.id = buttonId;
++		this.xPosition = x;
++		this.yPosition = y;
++		this.width = buttonWidth;
++		this.height = buttonHeight;
++		this.displayString = label;
+ 	}
+ 
+ 	protected int getHoverState(boolean var1) {

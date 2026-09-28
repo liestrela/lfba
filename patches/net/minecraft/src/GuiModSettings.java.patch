@@ -1,0 +1,64 @@
+--- a/net/minecraft/src/GuiModSettings.java
++++ b/net/minecraft/src/GuiModSettings.java
+@@ -0,0 +1,61 @@
++package net.minecraft.src;
++
++import net.minecraft.src.ModSettings;
++
++public class GuiModSettings extends GuiScreen {
++	private GuiScreen parentGuiScreen;
++	protected String screenTitle = "Mods";
++	private ModSettings options;
++
++	public GuiModSettings(GuiScreen gui, ModSettings settings) {
++		this.parentGuiScreen = gui;
++		this.options = settings;
++	}
++
++	public void initGui() {
++		this.controlList.clear();
++		this.controlList.add(new GuiButton(200, this.width / 2 - 100, this.height / 6 + 168, "Done"));
++		
++		int optionIndex = 0;
++		for(ModSetting option : ModSettings.getOptions()) {
++			this.controlList.add(
++				new GuiSmallButton(
++					option.getId(),
++					this.width / 2 - 155 + optionIndex % 2 * 160,
++					this.height / 6 + 24 * (optionIndex >> 1), 
++					this.options.getOptionDisplayString(option)
++				)
++			);
++
++			++optionIndex;
++		}
++
++	}
++
++	protected void actionPerformed(GuiButton button) {
++		if(!button.enabled) {
++			return;
++		}
++
++		if(button.id < 100) {
++			if(button instanceof GuiSmallButton) {
++				ModSetting option = ModSetting.byId(button.id);
++				this.options.moveOptionValue(option, GuiScreen.isShiftKeyDown() ? -1 : 1);
++				button.displayString = this.options.getOptionDisplayString(option);
++				if(option == ModSetting.FULLSCREEN_RESOLUTION) {
++					this.mc.applyFullscreenResolution();
++				}
++			}
++		} else if(button.id == 200) {
++			this.options.saveOptions();
++			this.mc.displayGuiScreen(this.parentGuiScreen);
++		}
++	}
++
++	public void drawScreen(int mouseX, int mouseY, float renderPartialTick) {
++		this.drawDefaultBackground();
++		this.drawCenteredString(this.fontRenderer, this.screenTitle, this.width / 2, 20, 0xFFFFFF);
++
++		super.drawScreen(mouseX, mouseY, renderPartialTick);
++	}
++}

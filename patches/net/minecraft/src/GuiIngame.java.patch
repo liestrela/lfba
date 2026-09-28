@@ -1,0 +1,35 @@
+--- a/net/minecraft/src/GuiIngame.java
++++ b/net/minecraft/src/GuiIngame.java
+@@ -369,22 +369,25 @@
+ 
+ 	}
+ 
+-	public void addChatMessage(String var1) {
+-		while(this.mc.fontRenderer.getStringWidth(var1) > 320) {
++	public void addChatMessage(String msg) {
++		while(this.mc.fontRenderer.getStringWidth(msg) > 320) {
+ 			int var2;
+-			for(var2 = 1; var2 < var1.length() && this.mc.fontRenderer.getStringWidth(var1.substring(0, var2 + 1)) <= 320; ++var2) {
++			for(var2 = 1; var2 < msg.length() && this.mc.fontRenderer.getStringWidth(msg.substring(0, var2 + 1)) <= 320; ++var2) {
+ 			}
+ 
+-			this.addChatMessage(var1.substring(0, var2));
+-			var1 = var1.substring(var2);
++			this.addChatMessage(msg.substring(0, var2));
++			msg = msg.substring(var2);
+ 		}
+ 
+-		this.chatMessageList.add(0, new ChatLine(var1));
++		this.chatMessageList.add(0, new ChatLine(msg));
+ 
+ 		while(this.chatMessageList.size() > 50) {
+ 			this.chatMessageList.remove(this.chatMessageList.size() - 1);
+ 		}
+-
++	}
++	
++	public void clearChat() {
++		this.chatMessageList.clear();
+ 	}
+ 
+ 	public void setRecordPlayingMessage(String var1) {

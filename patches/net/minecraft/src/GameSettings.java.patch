@@ -1,0 +1,157 @@
+--- a/net/minecraft/src/GameSettings.java
++++ b/net/minecraft/src/GameSettings.java
+@@ -13,6 +13,7 @@
+ 	private static final String[] RENDER_DISTANCES = new String[]{"FAR", "NORMAL", "SHORT", "TINY"};
+ 	private static final String[] DIFFICULTY_LEVELS = new String[]{"Peaceful", "Easy", "Normal", "Hard"};
+ 	private static final String[] GUISCALES = new String[]{"AUTO", "SMALL", "NORMAL", "LARGE"};
++	private static final String[] PICK_DURABILITIES = new String[]{"Pre-b1.2", "b1.2"};
+ 	public float musicVolume = 1.0F;
+ 	public float soundVolume = 1.0F;
+ 	public float mouseSensitivity = 0.5F;
+@@ -70,7 +71,7 @@
+ 
+ 	public GameSettings() {
+ 	}
+-
++	
+ 	public String getKeyBindingDescription(int var1) {
+ 		return this.keyBindings[var1].keyDescription + ": " + Keyboard.getKeyName(this.keyBindings[var1].keyCode);
+ 	}
+@@ -189,8 +190,8 @@
+ 
+ 	}
+ 
+-	public String getOptionDisplayString(int var1) {
+-		switch(var1) {
++	public String getOptionDisplayString(int optionId) {
++		switch(optionId) {
+ 		case 0:
+ 			return "Music: " + (this.musicVolume > 0.0F ? (int)(this.musicVolume * 100.0F) + "%" : "OFF");
+ 		case 1:
+@@ -245,71 +246,71 @@
+ 				return;
+ 			}
+ 
+-			BufferedReader var1 = new BufferedReader(new FileReader(this.optionsFile));
+-			String var2 = "";
++			BufferedReader bufferedOptionsFile = new BufferedReader(new FileReader(this.optionsFile));
++			String optionLine = "";
+ 
+ 			while(true) {
+-				var2 = var1.readLine();
+-				if(var2 == null) {
+-					var1.close();
++				optionLine = bufferedOptionsFile.readLine();
++				if(optionLine == null) {
++					bufferedOptionsFile.close();
+ 					break;
+ 				}
+ 
+-				String[] var3 = var2.split(":");
+-				if(var3[0].equals("music")) {
+-					this.musicVolume = this.parseFloat(var3[1]);
+-				} else if(var3[0].equals("sound")) {
+-					this.soundVolume = this.parseFloat(var3[1]);
+-				} else if(var3[0].equals("mouseSensitivity")) {
+-					this.mouseSensitivity = this.parseFloat(var3[1]);
+-				} else if(var3[0].equals("brightness")) {
+-					this.brightness = this.parseFloat(var3[1]);
+-				} else if(var3[0].equals("mipmap")) {
+-					this.mipmap = var3[1].equals("true");
+-				} else if(var3[0].equals("invertYMouse")) {
+-					this.invertMouse = var3[1].equals("true");
+-				} else if(var3[0].equals("viewDistance")) {
+-					this.renderDistance = Integer.parseInt(var3[1]);
+-				} else if(var3[0].equals("guiScale")) {
+-					this.guiScale = Integer.parseInt(var3[1]);
+-				} else if(var3[0].equals("bobView")) {
+-					this.viewBobbing = var3[1].equals("true");
+-				} else if(var3[0].equals("anaglyph3d")) {
+-					this.anaglyph = var3[1].equals("true");
+-				} else if(var3[0].equals("limitFramerate")) {
+-					this.limitFramerate = var3[1].equals("true");
+-				} else if(var3[0].equals("creative")) {
+-					this.creativeMode = var3[1].equals("true");
+-				} else if(var3[0].equals("difficulty")) {
+-					this.difficulty = Integer.parseInt(var3[1]);
+-				} else if(var3[0].equals("fancyGraphics")) {
+-					this.fancyGraphics = var3[1].equals("true");
+-				} else if(var3[0].equals("fullscreen")) {
+-					this.fullScreen = var3[1].equals("true");
+-				} else if(var3[0].equals("enableVsync")) {
+-					this.enableVsync = var3[1].equals("true");
+-				} else if(var3[0].equals("touchscreen")) {
+-					this.touchscreen = var3[1].equals("true");
+-				} else if(var3[0].equals("overrideWidth")) {
+-					this.overrideWidth = Integer.parseInt(var3[1]);
+-				} else if(var3[0].equals("overrideHeight")) {
+-					this.overrideHeight = Integer.parseInt(var3[1]);
+-				} else if(var3[0].equals("autoJump")) {
+-					this.autoJump = var3[1].equals("true");
++				String[] optionArgs = optionLine.split(":");
++				if(optionArgs[0].equals("music")) {
++					this.musicVolume = this.parseFloat(optionArgs[1]);
++				} else if(optionArgs[0].equals("sound")) {
++					this.soundVolume = this.parseFloat(optionArgs[1]);
++				} else if(optionArgs[0].equals("mouseSensitivity")) {
++					this.mouseSensitivity = this.parseFloat(optionArgs[1]);
++				} else if(optionArgs[0].equals("brightness")) {
++					this.brightness = this.parseFloat(optionArgs[1]);
++				} else if(optionArgs[0].equals("mipmap")) {
++					this.mipmap = optionArgs[1].equals("true");
++				} else if(optionArgs[0].equals("invertYMouse")) {
++					this.invertMouse = optionArgs[1].equals("true");
++				} else if(optionArgs[0].equals("viewDistance")) {
++					this.renderDistance = Integer.parseInt(optionArgs[1]);
++				} else if(optionArgs[0].equals("guiScale")) {
++					this.guiScale = Integer.parseInt(optionArgs[1]);
++				} else if(optionArgs[0].equals("bobView")) {
++					this.viewBobbing = optionArgs[1].equals("true");
++				} else if(optionArgs[0].equals("anaglyph3d")) {
++					this.anaglyph = optionArgs[1].equals("true");
++				} else if(optionArgs[0].equals("limitFramerate")) {
++					this.limitFramerate = optionArgs[1].equals("true");
++				} else if(optionArgs[0].equals("creative")) {
++					this.creativeMode = optionArgs[1].equals("true");
++				} else if(optionArgs[0].equals("difficulty")) {
++					this.difficulty = Integer.parseInt(optionArgs[1]);
++				} else if(optionArgs[0].equals("fancyGraphics")) {
++					this.fancyGraphics = optionArgs[1].equals("true");
++				} else if(optionArgs[0].equals("fullscreen")) {
++					this.fullScreen = optionArgs[1].equals("true");
++				} else if(optionArgs[0].equals("enableVsync")) {
++					this.enableVsync = optionArgs[1].equals("true");
++				} else if(optionArgs[0].equals("touchscreen")) {
++					this.touchscreen = optionArgs[1].equals("true");
++				} else if(optionArgs[0].equals("overrideWidth")) {
++					this.overrideWidth = Integer.parseInt(optionArgs[1]);
++				} else if(optionArgs[0].equals("overrideHeight")) {
++					this.overrideHeight = Integer.parseInt(optionArgs[1]);
++				} else if(optionArgs[0].equals("autoJump")) {
++					this.autoJump = optionArgs[1].equals("true");
+ 				}
+ 
+-				for(int var4 = 0; var4 < this.keyBindings.length; ++var4) {
+-					if(var3[0].equals("key_" + this.keyBindings[var4].keyDescription)) {
+-						this.keyBindings[var4].keyCode = Integer.parseInt(var3[1]);
++				for(int i = 0; i < this.keyBindings.length; ++i) {
++					if(optionArgs[0].equals("key_" + this.keyBindings[i].keyDescription)) {
++						this.keyBindings[i].keyCode = Integer.parseInt(optionArgs[1]);
+ 					}
+ 				}
+ 
+-				if(var3[0].equals("isomScale")) {
+-					this.isomScale = Integer.parseInt(var3[1]);
+-				} else if(var3[0].equals("hugeWidth")) {
+-					this.hugeWidth = Integer.parseInt(var3[1]);
+-				} else if(var3[0].equals("hugeHeight")) {
+-					this.hugeHeight = Integer.parseInt(var3[1]);
++				if(optionArgs[0].equals("isomScale")) {
++					this.isomScale = Integer.parseInt(optionArgs[1]);
++				} else if(optionArgs[0].equals("hugeWidth")) {
++					this.hugeWidth = Integer.parseInt(optionArgs[1]);
++				} else if(optionArgs[0].equals("hugeHeight")) {
++					this.hugeHeight = Integer.parseInt(optionArgs[1]);
+ 				}
+ 			}
+ 		} catch (Exception var5) {

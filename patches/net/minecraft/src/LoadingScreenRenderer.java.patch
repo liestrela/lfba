@@ -1,0 +1,20 @@
+--- a/net/minecraft/src/LoadingScreenRenderer.java
++++ b/net/minecraft/src/LoadingScreenRenderer.java
+@@ -113,7 +113,7 @@
+ 				this.mc.fontRenderer.drawStringWithShadow("Loading... " + var1 + "%", 8, scaledResolution1.getScaledHeight() - 16, -1);
+ 				GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+ 				GL11.glDisable(GL11.GL_BLEND);
+-				Display.update();
++				this.mc.updateDisplay();
+ 			}
+ 
+ 			return;
+@@ -172,7 +172,7 @@
+ 
+ 				this.mc.fontRenderer.drawStringWithShadow(this.currentlyDisplayedText, (var5 - this.mc.fontRenderer.getStringWidth(this.currentlyDisplayedText)) / 2, var6 / 2 - 4 - 16, 16777215);
+ 				this.mc.fontRenderer.drawStringWithShadow(this.currentlyDisplayedProgress, (var5 - this.mc.fontRenderer.getStringWidth(this.currentlyDisplayedProgress)) / 2, var6 / 2 - 4 + 8, 16777215);
+-				Display.update();
++				this.mc.updateDisplay();
+ 
+ 				try {
+ 					Thread.yield();

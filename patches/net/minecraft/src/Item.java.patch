@@ -1,0 +1,21 @@
+--- a/net/minecraft/src/Item.java
++++ b/net/minecraft/src/Item.java
+@@ -107,13 +107,13 @@
+ 	protected int iconIndex;
+ 	protected boolean bFull3D = false;
+ 
+-	protected Item(int var1) {
+-		this.shiftedIndex = 256 + var1;
+-		if(itemsList[256 + var1] != null) {
+-			System.out.println("CONFLICT @ " + var1);
++	protected Item(int id) {
++		this.shiftedIndex = 256 + id;
++		if(itemsList[256 + id] != null) {
++			System.out.println("CONFLICT @ " + id);
+ 		}
+ 
+-		itemsList[256 + var1] = this;
++		itemsList[256 + id] = this;
+ 	}
+ 
+ 	public Item setIconIndex(int var1) {

@@ -1,0 +1,25 @@
+--- a/net/minecraft/src/GuiChest.java
++++ b/net/minecraft/src/GuiChest.java
+@@ -1,6 +1,8 @@
+ package net.minecraft.src;
+ 
+ import org.lwjgl.opengl.GL11;
++import static net.minecraft.src.ModSetting.*;
++import static net.minecraft.src.ModSettingOptions.*;
+ 
+ public class GuiChest extends GuiContainer {
+ 	private IInventory upperChestInventory;
+@@ -77,4 +79,13 @@
+ 		this.drawTexturedModalRect(var3, var4, 0, 0, this.xSize, this.inventoryRows * 18 + 17);
+ 		this.drawTexturedModalRect(var3, var4 + this.inventoryRows * 18 + 17, 0, 126, this.xSize, 96);
+ 	}
++	
++	public void onGuiClosed() {
++		
++		if (ModSettings.getInstance().getOptionValue(CHEST_SOUND) == CHEST_SOUND_ENABLED) {
++			World world = this.mc.theWorld;
++			EntityPlayer player = this.mc.thePlayer;
++			world.playSoundEffect(player.posX + 0.5D, player.posY + 0.5D, player.posZ + 0.5D, "random.door_close", 1.0F, world.rand.nextFloat() * 0.1F + 0.9F);
++		}
++	}
+ }
